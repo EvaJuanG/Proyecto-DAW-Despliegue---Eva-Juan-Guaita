@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  mantenimiento_web:
+    container_name: eva-mantenimiento-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ../src:/var/www/html
+    ports:
+      - "8081:80"

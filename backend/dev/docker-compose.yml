@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  mysql_flash:
+    container_name: eva-mysql-dev
+    image: mysql:8.0.35-debian
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pass
+      MYSQL_DATABASE: films
+      MYSQL_USER: user_films
+      MYSQL_PASSWORD: pass_films
+    volumes:
+      - ../../sql/films_dump.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_dev_data:/var/lib/mysql
+    networks:
+      - backend_net
+
+  apache_flash:
+    container_name: eva-backend-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ../src:/var/www/html
+      - ./vhost.conf:/etc/apache2/sites-available/000-default.conf
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql_flash
+    networks:
+      - backend_net
+
+networks:
+  backend_net:
+    driver: bridge
+
+volumes:
+  mysql_dev_data:

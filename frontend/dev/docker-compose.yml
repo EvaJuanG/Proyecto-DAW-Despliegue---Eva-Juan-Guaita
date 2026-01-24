@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  apache_frontend_dev:
+    container_name: eva-frontend-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ../src/public_html:/var/www/html
+      - ./vhost.conf:/etc/apache2/sites-available/000-default.conf
+      - ./urls.js:/var/www/html/config/urls.js
+    ports:
+      - "80:80"
+    networks:
+      - frontend_net
+
+networks:
+  frontend_net:
+    driver: bridge
