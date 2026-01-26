@@ -5,3 +5,11 @@ Thumbs.db
 .vscode/
 .idea/
 node_modules/
+
+# Environment and Config
+*.env
+**/dbconfiguration.yml
+**/urls.js
+
+# Local configuration
+**/.htaccess
