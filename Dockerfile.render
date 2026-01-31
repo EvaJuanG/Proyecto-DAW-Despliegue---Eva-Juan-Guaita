@@ -27,13 +27,16 @@ RUN service mariadb start && \
     mariadb -e "FLUSH PRIVILEGES;" && \
     mariadb films < /tmp/init.sql
 
-# Copiar el código del Backend y Frontend (lo serviremos todo desde el mismo Apache)
-# El Backend en /api y el Frontend en el raíz
-COPY ./backend/src /var/www/html/api
+# Borrar el index.html por defecto de Debian
+RUN rm /var/www/html/index.html
+
+# Copiar el código del Backend y Frontend
+# Copiamos el contenido de src directamente para que la carpeta 'api' quede en /var/www/html/api
+COPY ./backend/src /var/www/html
 COPY ./frontend/src/public_html /var/www/html
 
-# Configurar vhost personalizado
-COPY ./backend/prod/vhost.conf /etc/apache2/sites-available/000-default.conf
+# Configurar vhost personalizado para Render
+COPY ./vhost.render.conf /etc/apache2/sites-available/000-default.conf
 
 # Script de arranque para iniciar MariaDB y Apache
 RUN echo '#!/bin/bash\nservice mariadb start\napache2ctl -D FOREGROUND' > /start.sh

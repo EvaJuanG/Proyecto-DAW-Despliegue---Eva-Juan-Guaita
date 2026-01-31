@@ -1,2 +1,2 @@
 //Rutas de las llamadas HTTP
-let apiUrl = window.location.origin + "/api";
+let apiUrl = window.location.origin;
