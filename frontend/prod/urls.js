@@ -1,2 +1,2 @@
 //Rutas de las llamadas HTTP
-let apiUrl = "http://films-backend.chickenkiller.com:8080";
+let apiUrl = window.location.origin + "/api";
