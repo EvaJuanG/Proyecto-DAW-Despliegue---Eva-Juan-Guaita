@@ -19,8 +19,8 @@ services:
   apache_flash_prod:
     container_name: eva-backend-prod
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: backend/prod/Dockerfile
     restart: always
     volumes:
       - ../src:/var/www/html

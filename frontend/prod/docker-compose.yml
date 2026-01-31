@@ -4,8 +4,8 @@ services:
   apache_frontend_prod:
     container_name: eva-frontend-prod
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: frontend/prod/Dockerfile
     restart: always
     volumes:
       - ../src/public_html:/var/www/html
