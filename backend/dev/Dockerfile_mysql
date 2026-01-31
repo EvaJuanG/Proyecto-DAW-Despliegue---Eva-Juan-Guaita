@@ -1,0 +1,8 @@
+FROM mysql:8.0.35-debian
+
+COPY ./sql/films_schema.sql /docker-entrypoint-initdb.d/init.sql
+
+ENV MYSQL_ROOT_PASSWORD=root_pass
+ENV MYSQL_DATABASE=films
+ENV MYSQL_USER=user_films
+ENV MYSQL_PASSWORD=pass_films
