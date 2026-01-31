@@ -1,20 +1,33 @@
 <?php
 
 //Guardo los datos de conexión de la base de datos en un fichero YML
+//Guardo los datos de conexión de la base de datos en un fichero YML
 function getDBConfig() {
-    $dbFileConfig=dirname(__FILE__)."/../../dbconfiguration.yml";
+    // Prioridad 1: Variables de entorno (Útil para Render/Cloud)
+    $host = getenv('DB_HOST');
+    $dbname = getenv('MYSQL_DATABASE');
+    $user = getenv('MYSQL_USER');
+    $pass = getenv('MYSQL_PASSWORD');
 
-    $configYML = yaml_parse_file($dbFileConfig);//necesita la extensión php-yaml
+    if ($host && $dbname && $user && $pass) {
+        return array(
+            "cad" => sprintf("mysql:dbname=%s;host=%s;charset=UTF8", $dbname, $host),
+            "user" => $user,
+            "pass" => $pass
+        );
+    }
+
+    // Prioridad 2: Archivo YAML (Útil para Local/EC2)
+    $dbFileConfig=dirname(__FILE__)."/../../dbconfiguration.yml";
+    $configYML = yaml_parse_file($dbFileConfig);
 
 	$cad = sprintf("mysql:dbname=%s;host=%s;charset=UTF8", $configYML["dbname"], $configYML["ip"]);
 
-    $result = array(
+    return array(
         "cad" => $cad,
         "user" => $configYML["user"],
         "pass" => $configYML["pass"]
     );
-
-	return $result;
 }
 
 function getDBConnection() {
