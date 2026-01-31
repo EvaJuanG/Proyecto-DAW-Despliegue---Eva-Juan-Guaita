@@ -1,0 +1,44 @@
+# Dockerfile especial para Render (Todo-en-uno)
+FROM debian:latest
+
+LABEL maintainer="evajuagua@alu.edu.gva.es"
+
+# Instalar Apache, PHP y MySQL (MariaDB es el reemplazo libre de MySQL en Debian)
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    mariadb-server \
+    php \
+    php-mysql \
+    php-yaml \
+    libapache2-mod-php \
+    curl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Configurar Apache
+RUN a2enmod rewrite headers
+RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
+
+# Preparar la base de datos
+COPY ./sql/films_schema.sql /tmp/init.sql
+RUN service mariadb start && \
+    mariadb -e "CREATE DATABASE IF NOT EXISTS films;" && \
+    mariadb -e "CREATE USER IF NOT EXISTS 'user_films_prod'@'localhost' IDENTIFIED BY 'pass_films_prod';" && \
+    mariadb -e "GRANT ALL PRIVILEGES ON films.* TO 'user_films_prod'@'localhost';" && \
+    mariadb -e "FLUSH PRIVILEGES;" && \
+    mariadb films < /tmp/init.sql
+
+# Copiar el código del Backend y Frontend (lo serviremos todo desde el mismo Apache)
+# El Backend en /api y el Frontend en el raíz
+COPY ./backend/src /var/www/html/api
+COPY ./frontend/src/public_html /var/www/html
+
+# Configurar vhost personalizado
+COPY ./backend/prod/vhost.conf /etc/apache2/sites-available/000-default.conf
+
+# Script de arranque para iniciar MariaDB y Apache
+RUN echo '#!/bin/bash\nservice mariadb start\napache2ctl -D FOREGROUND' > /start.sh
+RUN chmod +x /start.sh
+
+EXPOSE 80
+
+CMD ["/start.sh"]

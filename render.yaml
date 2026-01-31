@@ -1,47 +1,16 @@
 services:
-  # MySQL Database (Web Service for free tier)
   - type: web
-    name: mysql-flash
+    name: flash-full-stack
     env: docker
     plan: free
     dockerContext: .
-    dockerfilePath: backend/dev/Dockerfile_mysql
+    dockerfilePath: Dockerfile.render
     envVars:
-      - key: MYSQL_ROOT_PASSWORD
-        value: root_pass_prod
+      - key: DB_HOST
+        value: localhost
       - key: MYSQL_DATABASE
         value: films
       - key: MYSQL_USER
         value: user_films_prod
       - key: MYSQL_PASSWORD
         value: pass_films_prod
-
-  # Backend API (PHP)
-  - type: web
-    name: flash-backend
-    env: docker
-    plan: free
-    dockerContext: .
-    dockerfilePath: backend/prod/Dockerfile
-    envVars:
-      - key: BACKEND_PORT
-        value: 80
-      - key: MYSQL_DATABASE
-        value: films
-      - key: MYSQL_USER
-        value: user_films_prod
-      - key: MYSQL_PASSWORD
-        value: pass_films_prod
-      - key: DB_HOST # Render internal hostname
-        value: mysql-flash
-
-  # Frontend (Apache)
-  - type: web
-    name: flash-frontend
-    env: docker
-    plan: free
-    dockerContext: .
-    dockerfilePath: frontend/prod/Dockerfile
-    envVars:
-      - key: PORT
-        value: 80
