@@ -1,4 +1,4 @@
-ip: mysql_backend_prod
+ip: mysql_flash_prod
 dbname: films
 user: user_films_prod
 pass: pass_films_prod

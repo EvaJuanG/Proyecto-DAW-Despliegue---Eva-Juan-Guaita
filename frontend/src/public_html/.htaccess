@@ -1,1 +1,11 @@
+# Impedir el listado de directorios
+Options -Indexes
+
+# Página de error 404 personalizada
 ErrorDocument 404 /404.html
+
+# Redirigir de .mooo.com a .chickenkiller.com
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^films-evajg\.mooo\.com$ [NC]
+RewriteRule ^(.*)$ http://films-evajg.chickenkiller.com/$1 [R=301,L]
+
