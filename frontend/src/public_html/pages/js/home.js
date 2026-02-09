@@ -83,6 +83,7 @@ function addNewFilm() {
         plot: document.getElementById("plot").value
     }
 
+    console.log("Adding new film with data:", jsonData);
     fetch(apiUrl + "/api/films/add_film.php", {
         method: 'POST',
         headers: {
@@ -91,10 +92,12 @@ function addNewFilm() {
         body: JSON.stringify(jsonData)
     })
         .then((response) => {
+            console.log("Add film response status:", response.status);
             if (response.status == 500)
                 alert("Se ha producido un error, vuélvelo a intentar, si el problema persiste contacte con el administrador");
             else {
                 response.json().then((data) => {
+                    console.log("Add film data received:", data);
                     if (data.status == "OK") {
                         loadFilms();
 
@@ -104,9 +107,16 @@ function addNewFilm() {
 
                         alert("Película añadida correctamente");
                     } else
-                        alert("Se ha producido un error, vuélvelo a intentar, si el problema persiste contacte con el administrador")
+                        alert("Se ha producido un error: " + data.message);
+                }).catch(err => {
+                    console.error("Add film JSON parse error:", err);
+                    alert("Error al procesar la respuesta del servidor al añadir película");
                 });
             }
+        })
+        .catch(err => {
+            console.error("Add film fetch error:", err);
+            alert("No se pudo conectar con el servidor para añadir la película: " + err.message);
         });
 
     return false;
