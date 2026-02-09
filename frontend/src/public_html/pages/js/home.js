@@ -43,21 +43,31 @@ function loadFilms() {
     let tableBody = document.getElementById("tbody-container");
     tableBody.innerHTML = "";
 
+    console.log("Fetching from: " + apiUrl + "/api/films/get_films.php");
     fetch(apiUrl + "/api/films/get_films.php", {
         method: 'GET'
     })
         .then((response) => {
+            console.log("Response status: " + response.status);
             if (response.status == 500)
                 alert("Se ha producido un error, vuélvelo a intentar, si el problema persiste contacte con el administrador");
             else {
                 response.json().then((data) => {
+                    console.log("Data received:", data);
                     if (data.status == "OK") {
                         loadDataInTable(data.data, tableBody);
                     } else
                         alert("Se ha producido un error, vuélvelo a intentar, si el problema persiste contacte con el administrador");
+                }).catch(err => {
+                    console.error("JSON parse error:", err);
+                    alert("Error al procesar la respuesta del servidor");
                 });
             }
         })
+        .catch(err => {
+            console.error("Fetch error:", err);
+            alert("No se pudo conectar con el servidor: " + err.message);
+        });
 
 }
 //-------------------------------------
