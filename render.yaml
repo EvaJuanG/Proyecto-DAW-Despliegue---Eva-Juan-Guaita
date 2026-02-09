@@ -7,7 +7,7 @@ services:
     dockerfilePath: Dockerfile.render
     envVars:
       - key: DB_HOST
-        value: localhost
+        value: 127.0.0.1
       - key: MYSQL_DATABASE
         value: films
       - key: MYSQL_USER

@@ -22,8 +22,8 @@ RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 COPY ./sql/films_dump.sql /tmp/init.sql
 RUN service mariadb start && \
     mariadb -e "CREATE DATABASE IF NOT EXISTS films;" && \
-    mariadb -e "CREATE USER IF NOT EXISTS 'user_films_prod'@'localhost' IDENTIFIED BY 'pass_films_prod';" && \
-    mariadb -e "GRANT ALL PRIVILEGES ON films.* TO 'user_films_prod'@'localhost';" && \
+    mariadb -e "CREATE USER IF NOT EXISTS 'user_films_prod'@'%' IDENTIFIED BY 'pass_films_prod';" && \
+    mariadb -e "GRANT ALL PRIVILEGES ON films.* TO 'user_films_prod'@'%';" && \
     mariadb -e "FLUSH PRIVILEGES;" && \
     mariadb films < /tmp/init.sql
 
