@@ -19,7 +19,7 @@ RUN a2enmod rewrite headers
 RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 
 # Preparar la base de datos
-COPY ./sql/films_schema.sql /tmp/init.sql
+COPY ./sql/films_dump.sql /tmp/init.sql
 RUN service mariadb start && \
     mariadb -e "CREATE DATABASE IF NOT EXISTS films;" && \
     mariadb -e "CREATE USER IF NOT EXISTS 'user_films_prod'@'localhost' IDENTIFIED BY 'pass_films_prod';" && \

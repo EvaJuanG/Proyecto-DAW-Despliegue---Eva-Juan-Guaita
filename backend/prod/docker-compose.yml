@@ -11,7 +11,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - ../../sql/films_schema.sql:/docker-entrypoint-initdb.d/init.sql
+      - ../../sql/films_dump.sql:/docker-entrypoint-initdb.d/init.sql
       - mysql_prod_data:/var/lib/mysql
     networks:
       - backend_net_prod
