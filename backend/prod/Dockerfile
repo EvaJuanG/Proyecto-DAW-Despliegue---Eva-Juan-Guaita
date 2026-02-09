@@ -12,12 +12,10 @@ RUN apt-get update && apt-get install -y \
 
 RUN a2enmod rewrite headers
 
-# Copiar el código de la aplicación y configuración
 COPY ./backend/src /var/www/html
 COPY ./backend/prod/vhost.conf /etc/apache2/sites-available/000-default.conf
 COPY ./backend/prod/dbconfiguration.yml /var/www/html/dbconfiguration.yml
 
-# Configuración de Apache para permitir .htaccess y logs
 RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 
 EXPOSE 80

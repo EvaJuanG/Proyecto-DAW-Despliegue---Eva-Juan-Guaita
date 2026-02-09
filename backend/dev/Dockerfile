@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y \
 
 RUN a2enmod rewrite headers
 
-# Configuración de Apache para permitir .htaccess y logs
 RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 
 EXPOSE 80

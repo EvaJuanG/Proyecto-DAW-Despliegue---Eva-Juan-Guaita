@@ -1,7 +1,7 @@
 # Impedir el listado de directorios
 Options -Indexes
 
-# Página de error 404 personalizada
+# Página de error 404
 ErrorDocument 404 /404.html
 
 # Redirigir de .mooo.com a .chickenkiller.com
