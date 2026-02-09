@@ -9,7 +9,10 @@ node_modules/
 # Environment and Config
 *.env
 **/dbconfiguration.yml
-**/urls.js
+frontend/dev/urls.js
+frontend/prod/urls.js
+backend/dev/dbconfiguration.yml
+backend/prod/dbconfiguration.yml
 
 # Local configuration
 **/.htaccess
