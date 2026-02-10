@@ -1,53 +1,69 @@
 # Proyecto Final DAW - Gestión de Películas
 
-Este proyecto consiste en una aplicación web de gestión de películas desarrollada con una arquitectura de Microservicios utilizando **Docker Compose**.
+Este proyecto consiste en una aplicación web de gestión de películas desarrollada con una arquitectura de Microservicios utilizando **Docker Compose**. La aplicación está preparada para funcionar tanto en entornos locales como en producción (AWS y Render).
 
 ## Estructura del Proyecto
 
-*   `backend/`: Contiene la API desarrollada en PHP y la base de datos MySQL.
-*   `frontend/`: Interfaz de usuario estática servida con Apache.
-*   `mantenimiento/`: Página de cortesía para cuando el servicio no está disponible.
-*   `sql/`: Scripts de inicialización de la base de datos.
+*   `backend/`: API desarrollada en PHP. Incluye configuraciones para Docker (Apache + PHP).
+*   `frontend/`: Interfaz de usuario (HTML/JS/CSS) servida con Apache.
+*   `mantenimiento/`: Página de cortesía para periodos de mantenimiento.
+*   `sql/`: Scripts SQL para la creación del esquema y carga inicial de datos.
 
-## Requisitos Previos
+## 🛠️ Tecnologías Utilizadas
 
-*   Docker Desktop instalado.
-*   Git para el control de versiones.
+*   **Backend**: PHP 8.x, Apache.
+*   **Frontend**: JavaScript (Vanilla), HTML5, CSS3.
+*   **Base de Datos**: MySQL (Local y Clever Cloud).
+*   **Infraestructura**: Docker, Docker Compose.
+*   **Despliegue**: AWS (EC2), Render (PaaS).
 
-## Despliegue en Desarrollo
+## 💻 Despliegue en Desarrollo (Local)
 
-Para levantar el entorno de desarrollo, sigue estos pasos:
+Para levantar el entorno local:
 
-1.  Navega a la carpeta del proyecto.
-2.  Ejecuta los archivos de Docker Compose para cada servicio:
+1.  Navega a la raíz del proyecto.
+2.  Levanta los contenedores:
     ```bash
-    # Backend (MySQL + Apache PHP)
     docker-compose -f backend/dev/docker-compose.yml up -d
-
-    # Frontend (Apache)
     docker-compose -f frontend/dev/docker-compose.yml up -d
     ```
-3.  Accede a la aplicación:
-    -   **Frontend**: [http://localhost](http://localhost)
-    -   **Backend (API)**: [http://localhost:8080](http://localhost:8080)
+3.  La web estará disponible en [http://localhost](http://localhost) (puerto 80) y la API en [http://localhost:8080](http://localhost:8080).
 
-## Despliegue en Producción
+## 🚀 Despliegue en Producción
 
-El despliegue en producción está diseñado para ser utilizado en **AWS (EC2)** y plataformas de auto-despliegue como **Render**.
+### 1. Base de Datos (Clever Cloud)
+Para el entorno de producción, utilizamos una base de datos MySQL gestionada en **Clever Cloud**.
+- **Ventaja**: Evita el borrado de datos en plataformas PaaS como Render que tienen sistemas de archivos efímeros.
+- **Configuración**: Las credenciales se encuentran en `backend/prod/dbconfiguration.yml` (asegúrate de que este archivo esté presente en el servidor).
 
-1.  Configura el archivo `.env` en `backend/prod/` con las credenciales de producción.
-2.  Despliega utilizando los archivos de producción:
-    ```bash
-    docker-compose -f backend/prod/docker-compose.yml up -d
-    docker-compose -f frontend/prod/docker-compose.yml up -d
-    ```
+### 2. Despliegue en Render
+El proyecto está configurado para despliegue automático en Render:
+- **Backend**: Configurado como un *Web Service* usando el `Dockerfile` de `backend/prod/`.
+- **Frontend**: Configurado como un *Static Site* apuntando a la carpeta `frontend/src/public_html`.
+- **Conectividad**: El archivo `urls.js` detecta automáticamente el dominio `.onrender.com` para apuntar a la URL de producción de la API.
 
-## Características Implementadas
+### 3. Despliegue en AWS (EC2)
+Para el despliegue en AWS EC2:
+1.  Se utiliza una instancia EC2 con Docker y Docker Compose instalados.
+2.  Configuración de red: El puerto **8080** debe estar abierto en el *Security Group* para permitir el acceso a la API.
+3.  Dominios: Se utilizan servicios como FreeDNS para asignar nombres de dominio (ej: `chickenkiller.com`) a la IP de la instancia.
 
-*   **CORS**: Configurado en el servidor Apache del backend para permitir peticiones desde el dominio del frontend.
-*   **VirtualHosts**: Configuración personalizada para desarrollo y producción.
-*   **HTACCESS**: Redirecciones automáticas y gestión de errores 404 personalizada.
-*   **Persistencia**: Volúmenes de Docker para asegurar que los datos de MySQL no se pierdan.
+## 🔧 Errores Solucionados y Troubleshooting
+
+Durante el desarrollo y despliegue, se han abordado varios retos técnicos:
+
+### Solución a Conflictos de CORS
+Se detecto un conflicto donde el servidor Apache (`vhost.conf`) y el código PHP enviaban cabeceras `Access-Control-Allow-Origin` duplicadas, lo que causaba errores en el navegador.
+- **Solución**: Se centralizó la gestión de CORS en PHP y se eliminaron las directivas redundantes de los archivos `vhost.conf`.
+
+### Error 500 (Base de Datos no encontrada)
+En AWS, la API devolvía un Error 500 porque el archivo `dbconfiguration.yml` no se subía al repositorio (estaba en `.gitignore`).
+- **Solución**: Se ajustó el `.gitignore` para permitir la subida de la configuración de producción y se verificó la correcta sincronización con Clever Cloud.
+
+### Enrutamiento de API Inteligente
+Para evitar cambiar manualmente las URLs de la API en cada despliegue, se implementó una lógica en `frontend/src/public_html/config/urls.js`:
+- Detecta si el origen es `localhost`, `render.com` o un dominio personalizado de AWS.
+- Asigna la `apiUrl` correspondiente de forma automática.
 
 ---
 **Autor**: Eva Juagua
