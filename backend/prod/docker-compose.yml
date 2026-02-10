@@ -25,7 +25,11 @@ services:
     volumes:
       - ../src:/var/www/html
       - ./vhost.conf:/etc/apache2/sites-available/000-default.conf
-      - ./dbconfiguration.yml:/var/www/html/dbconfiguration.yml
+    environment:
+      - DB_HOST=eva-mysql-prod
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - "${BACKEND_PORT}:80"
     depends_on:
