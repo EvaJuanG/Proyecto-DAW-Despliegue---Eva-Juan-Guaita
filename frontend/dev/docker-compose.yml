@@ -9,7 +9,6 @@ services:
     volumes:
       - ../src/public_html:/var/www/html
       - ./vhost.conf:/etc/apache2/sites-available/000-default.conf
-      - ./urls.js:/var/www/html/config/urls.js
     ports:
       - "80:80"
     networks:

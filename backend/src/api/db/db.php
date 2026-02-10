@@ -42,11 +42,17 @@ function getDBConnection()
 {
     try {
         $res = getDBConfig();
+        if (is_null($res)) {
+            error_log("Database configuration not found or invalid.");
+            return null;
+        }
 
         $bd = new PDO($res["cad"], $res["user"], $res["pass"]);
+        $bd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         return $bd;
     } catch (PDOException $e) {
+        error_log("Connection failed: " . $e->getMessage());
         return null;
     }
 }
