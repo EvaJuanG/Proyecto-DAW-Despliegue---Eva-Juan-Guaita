@@ -12,7 +12,7 @@ node_modules/
 frontend/dev/urls.js
 frontend/prod/urls.js
 backend/dev/dbconfiguration.yml
-backend/prod/dbconfiguration.yml
+backend/dev/dbconfiguration.yml
 
 # Local configuration
 **/.htaccess
