@@ -27,11 +27,11 @@ services:
       - ./vhost.conf:/etc/apache2/sites-available/000-default.conf
     environment:
       - DB_HOST=eva-mysql-prod
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=films
+      - MYSQL_USER=user_films_prod
+      - MYSQL_PASSWORD=pass_films_prod
     ports:
-      - "${BACKEND_PORT}:80"
+      - "8080:80"
     depends_on:
       - mysql_flash_prod
     networks:

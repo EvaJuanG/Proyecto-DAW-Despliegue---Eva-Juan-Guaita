@@ -11,7 +11,7 @@ function getDBConfig()
 
     if ($host && $dbname && $user && $pass) {
         return array(
-            "cad" => sprintf("mysql:dbname=%s;host=%s;charset=UTF8", $dbname, $host),
+            "cad" => sprintf("mysql:dbname=%s;host=%s;charset=utf8mb4", $dbname, $host),
             "user" => $user,
             "pass" => $pass
         );
@@ -88,7 +88,7 @@ function getFilmsDB()
         $bd = getDBConnection();
 
         if (!is_null($bd)) {
-            $sqlPrepared = $bd->prepare("SELECT id,name, director, classification from film");
+            $sqlPrepared = $bd->prepare("SELECT id, name, director, classification, img, plot FROM film");
             $sqlPrepared->execute();
 
             return $sqlPrepared->fetchAll(PDO::FETCH_ASSOC);
